@@ -1,0 +1,43 @@
+{{- $title := site.Title -}}
+{{- if not .IsHome }}{{ $title = printf "%s · %s" .Title site.Title }}{{ end -}}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Hugo {{ hugo.Version }}">
+<title>{{ $title }}</title>
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
+<meta name="author" content="{{ site.Params.author }}">
+{{- $favicon := site.Params.favicon | default "/favicon.svg" -}}
+{{- $favURL := $favicon | strings.TrimPrefix "/" | relURL -}}
+{{- $ext := path.Ext $favicon | lower -}}
+{{- $mime := "image/svg+xml" -}}
+{{- if eq $ext ".ico" -}}{{- $mime = "image/x-icon" -}}
+{{- else if eq $ext ".png" -}}{{- $mime = "image/png" -}}
+{{- else if or (eq $ext ".jpg") (eq $ext ".jpeg") -}}{{- $mime = "image/jpeg" -}}
+{{- else if eq $ext ".webp" -}}{{- $mime = "image/webp" -}}
+{{- else if eq $ext ".gif" -}}{{- $mime = "image/gif" -}}
+{{- end -}}
+<link rel="icon" type="{{ $mime }}" href="{{ $favURL }}">
+{{- if ne $ext ".svg" }}
+<link rel="apple-touch-icon" href="{{ $favURL }}">
+{{- end }}
+
+{{/* 在渲染前应用主题，避免闪白 */}}
+<script>
+  (function () {
+    var saved = localStorage.getItem("theme");
+    var root = document.documentElement;
+    if (saved) {
+      root.setAttribute("data-theme", saved);
+    } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      root.setAttribute("data-theme", "dark");
+    }
+    if (localStorage.getItem("sidebar") === "collapsed") {
+      root.classList.add("sidebar-collapsed");
+    }
+  })();
+</script>
+
+{{- $main := resources.Get "css/main.css" -}}
+{{- $syntax := resources.Get "css/syntax.css" -}}
+{{- $css := slice $main $syntax | resources.Concat "css/bundle.css" | minify | fingerprint -}}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}" crossorigin="anonymous">

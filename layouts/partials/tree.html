@@ -1,0 +1,28 @@
+{{- /* 递归渲染文档树。参数：section / current / showDate / collapsed */ -}}
+{{- $section := .section -}}
+{{- $current := .current -}}
+{{- $showDate := .showDate | default false -}}
+{{- $collapsed := .collapsed | default false -}}
+<ul class="tree-list">
+  {{- range $section.Sections.ByWeight }}
+  <li>
+    <span class="tree-toggle {{ if $collapsed }}collapsed{{ else }}expanded{{ end }}"></span>
+    <span class="section-link"><strong>{{ .Title }}</strong></span>
+    <div class="tree-children{{ if $collapsed }} hidden{{ end }}"{{ if $collapsed }} style="display:none"{{ end }}>
+      {{- partial "tree.html" (dict "section" . "current" $current "showDate" $showDate "collapsed" $collapsed) -}}
+    </div>
+  </li>
+  {{- end }}
+  {{- range $section.RegularPages.ByWeight }}
+  <li>
+    <div class="tree-item-wrapper">
+      <span class="tree-indent"></span>
+      <a href="{{ .RelPermalink }}" class="article-link" data-summary="{{ .Summary | plainify | htmlUnescape | replaceRE `\s+` ` ` | truncate 400 }}">{{ .Title }}</a>
+      {{- if $showDate }}
+      <div class="tree-dashed-line"></div>
+      <span class="tree-date">{{ .Date.Format "2006-01-02" }}</span>
+      {{- end }}
+    </div>
+  </li>
+  {{- end }}
+</ul>

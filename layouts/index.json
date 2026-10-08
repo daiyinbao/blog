@@ -1,0 +1,13 @@
+{{- $pages := site.RegularPages -}}
+[
+{{- range $i, $p := $pages }}
+{{- if $i }},{{ end }}
+{
+  "title": {{ $p.Title | jsonify }},
+  "link": {{ $p.RelPermalink | jsonify }},
+  "date": {{ ($p.Date.Format "2006-01-02") | jsonify }},
+  "summary": {{ ($p.Summary | plainify | htmlUnescape | replaceRE `\s+` ` ` | truncate 200) | jsonify }},
+  "content": {{ ($p.Plain | htmlUnescape | replaceRE `\s+` ` ` | truncate 3000) | jsonify }}
+}
+{{- end }}
+]

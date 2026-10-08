@@ -1,0 +1,40 @@
+# 说明：这个站点目前部署在自建服务器上（见 deploy/deploy.sh），
+# 所以默认不在 GitHub 上自动构建。
+#
+# 如果以后想改用 GitHub Pages 托管，把下面 `on:` 里的注释恢复即可
+# （同时记得把 hugo.toml 的 baseURL 改成 Pages 地址）。
+name: Build Hugo site (check only)
+
+on:
+  # push:
+  #   branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.167.0
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build with Hugo
+        env:
+          HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
+          HUGO_ENVIRONMENT: production
+        run: hugo --gc --minify

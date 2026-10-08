@@ -1,0 +1,15 @@
+# Hugo 构建产物
+public/
+resources/_gen/
+.hugo_build.lock
+
+# 本地工具缓存
+.tmp/
+.chrome-profile/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 部署脚本的本地配置（含服务器地址）
+deploy/deploy.env

@@ -1,0 +1,6 @@
+{{ define "main" }}
+<h1 class="home-title">{{ .Title }}</h1>
+<div class="homepage-tree tree">
+  {{- partial "tree.html" (dict "section" . "current" $ "showDate" true "collapsed" false) }}
+</div>
+{{ end }}

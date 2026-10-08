@@ -1,0 +1,66 @@
+# ─────────────────────────────────────────────────────────────
+#  站点基础配置 —— 改这里就能变成你自己的博客
+# ─────────────────────────────────────────────────────────────
+
+# 部署后你的博客地址（GitHub Pages 项目页形如 https://<用户名>.github.io/<仓库名>/）
+baseURL = "https://example.github.io/"
+locale = "zh-cn"
+defaultContentLanguage = "zh-cn"
+title = "xiaoyaoxian的博客"
+hasCJKLanguage = true
+enableRobotsTXT = true
+
+# 每页摘要长度（用于首页 / 悬停预览）
+summaryLength = 120
+
+# ── 个人信息 ────────────────────────────────────────────────
+[params]
+  author = "xiaoyaoxian"
+  # 头像：把图片放到 static/ 下，然后改这里（支持 jpg/png/svg/webp）
+  avatar = "/photo.jpg"
+  # 浏览器标签页图标（favicon）：同样放 static/ 下
+  favicon = "/photo.jpg"
+  # 首页顶部的一句话简介
+  description = "回首向来萧瑟处，归去，也无风雨也无晴！"
+  # 右上角“关于我”按钮跳转的地址
+  aboutURL = "/about/"
+  github = "https://github.com/daiyinbao"
+  # 页脚文案
+  footer = "Created by xiaoyaoxian · Powered by Hugo & GitHub Pages"
+  # 搜索框占位文字
+  searchPlaceholder = "搜索文章..."
+  # 左栏标题
+  sidebarTitle = "文档"
+
+# ── 内容渲染 ────────────────────────────────────────────────
+[markup]
+  [markup.goldmark.renderer]
+    # 允许在 Markdown 里写原生 HTML
+    unsafe = true
+  [markup.highlight]
+    # 用 class 输出，方便自己控制明暗两套配色
+    noClasses = false
+    lineNos = false
+    style = "github"
+
+# ── 输出：首页额外生成搜索用的 index.json ────────────────────
+[outputs]
+  home = ["HTML", "JSON"]
+  # 每篇文章额外生成一份原始 Markdown，供「导出 MD」下载
+  page = ["HTML", "Markdown"]
+
+[outputFormats.JSON]
+  mediaType = "application/json"
+  baseName = "index"
+  isPlainText = true
+  notAlternative = true
+
+[outputFormats.Markdown]
+  mediaType = "text/markdown"
+  baseName = "index"
+  isPlainText = true
+  isHTML = false
+  notAlternative = true
+
+# 不参与构建的文件
+ignoreFiles = ["\\.bak$"]

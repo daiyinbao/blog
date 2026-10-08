@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="{{ site.Language.Locale }}" dir="ltr">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body>
+  {{ partial "header.html" . }}
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+  <main>
+    <div class="container">
+      {{ partial "sidebar-left.html" . }}
+      <button class="sidebar-toggle" id="sidebar-toggle" type="button"
+              aria-controls="sidebar-left" aria-expanded="true" title="收起 / 展开目录树">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="content-center">
+        {{ block "main" . }}{{ end }}
+        <p class="site-footer">{{ site.Params.footer }}</p>
+      </div>
+      {{ block "sidebar-right" . }}{{ end }}
+    </div>
+  </main>
+  {{ partial "search-modal.html" . }}
+  {{ partial "scripts.html" . }}
+</body>
+</html>
