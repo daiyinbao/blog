@@ -520,34 +520,65 @@ blog.example.com {
 │   └── js/main.js            # 交互脚本（原生 JS，无依赖）
 ├── static/                   # 头像、favicon 等原样拷贝的资源
 ├── archetypes/default.md     # `hugo new` 用的文章模板
+├── scripts/                  # 辅助脚本（都需要 python3）
+│   ├── optimize-images.py    # PNG/JPG 批量转 WebP，并改写文章引用
+│   ├── shrink-oversized.py   # 把过宽的图片等比缩小
+│   ├── simpread-to-hugo.py   # 把简悦保存的网页转成 Hugo 文章
+│   └── gen-syntax.py         # 生成代码高亮配色 assets/css/syntax.css
 ├── deploy/
 │   ├── nginx.conf            # Nginx 站点配置
 │   ├── deploy.sh             # 构建 + rsync 发布脚本
 │   ├── deploy.env.example    # 发布配置模板
 │   └── deploy.env            # 本地实际配置（已 gitignore）
-└── .github/workflows/hugo.yml # GitHub Pages 自动部署（可选）
+└── .github/workflows/hugo.yml # 构建检查（手动触发）
 ```
 
 ## 当前内容
 
-站点现有 10 个栏目（左栏顺序）：
+站点有 10 个栏目（左栏顺序）：
 
 `Java 基础`、`后端框架`、`算法`、`Agent 开发`、`运维`、`Linux`、`开发工具`、`日常使用`、`面试`、`随笔`
 
-已有的文章：
+其中已经写了文章的栏目：
 
-| 路径 | 说明 |
-| --- | --- |
-| `content/blog/开发工具/git-常用命令速查.md` | Git 常用命令速查表 |
-| `content/blog/开发工具/hugo-搭建个人博客.md` | 本站的搭建记录 |
-| `content/blog/运维/kafka/初始kafka.md` | Kafka 笔记（目前还是模板正文，待补充） |
-| `content/blog/随笔/hello-world.md` | 开博第一篇 |
+| 栏目 | 篇数 | 说明 |
+| --- | --- | --- |
+| `Agent开发/Agent基础` | 5 | 项目总览、AI 大模型接入、AI 应用开发、AI 智能体构建、AI 服务化 |
+| `Agent开发/RAG` | 2 | RAG 知识库基础 / 进阶 |
+| `Agent开发/MCP` | 1 | MCP 协议 |
+| `Agent开发/Skill` | 1 | 工具调用 |
+| `后端框架/Spring` | 2 | 深入理解动态代理、mini-spring |
+| `后端框架/微服务` | 2 | 微服务下的登录模块、容联云短信验证 |
+| `后端框架/分布式` | 1 | 滑动窗口限流 |
+| `Java基础/集合框架` | 1 | 理解 HashMap |
+| `算法/数据结构` | 1 | 位图的原理 |
+| `Linux` | 1 | Linux 下的软件管理 |
+| `运维/kafka` | 1 | 初始 Kafka（还是模板正文，待补充） |
+| `开发工具` | 2 | Git 常用命令速查、Hugo 搭建个人博客 |
+| `随笔` | 2 | hello-world、在路上｜实习日志 |
 
-还可以清理的：
+共 22 篇文章、425 张配图。`日常使用`、`面试` 两个栏目暂时还是空的。
 
-| 路径 | 说明 |
-| --- | --- |
-| `static/avatar.svg`、`static/favicon.svg` | 早期占位图；现在头像 / 图标用的是 `static/photo.jpg` |
+## 辅助脚本依赖
+
+`scripts/` 下的脚本用 Python 3，按需安装：
+
+```bash
+sudo apt install imagemagick        # optimize-images.py / shrink-oversized.py 需要
+pip install beautifulsoup4 markdownify  # simpread-to-hugo.py 需要
+```
+
+`gen-syntax.py` 需要本机已装 Hugo。
+
+## 关于这个仓库
+
+这是我的个人知识库博客，**重点在于记录自己的学习过程**，所以：
+
+- 内容是个人笔记，可能有不准确或过时的地方，请以官方文档为准
+- 主题代码（`layouts/`、`assets/`）随便拿去用，不用署名
+- 文章内容请不要直接转载，有需要请附上原文链接
+
+站点的构建产物（`public/`）和服务器配置（`deploy/deploy.env`）没有提交到仓库。
 
 ## 许可
 
