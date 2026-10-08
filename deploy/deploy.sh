@@ -20,6 +20,9 @@ SSH_PORT="${SSH_PORT:-22}"
 echo "==> 构建（baseURL = $BASE_URL）"
 hugo --gc --minify --cleanDestinationDir --baseURL "$BASE_URL"
 
+echo "==> 为带图片的文章打包 zip（供「下载文章包」使用）"
+python3 scripts/make-zips.py public --clean
+
 echo "==> 上传 public/ → $REMOTE:$TARGET"
 rsync -avz --delete -e "ssh -p $SSH_PORT" public/ "$REMOTE:$TARGET/"
 
