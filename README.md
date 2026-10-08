@@ -453,7 +453,12 @@ hugo --gc --minify --baseURL https://blog.example.com/ -d /var/www/blog
 ### 配置 Nginx
 
 ```bash
+# Debian/Ubuntu 常见两种放法，选一种即可
 sudo cp deploy/nginx.conf /etc/nginx/conf.d/blog.conf
+# 或者：
+# sudo cp deploy/nginx.conf /etc/nginx/sites-available/blog
+# sudo ln -sf /etc/nginx/sites-available/blog /etc/nginx/sites-enabled/blog
+
 sudo vim /etc/nginx/conf.d/blog.conf   # 改 server_name 和 root
 sudo nginx -t && sudo systemctl reload nginx
 ```
@@ -494,6 +499,82 @@ blog.example.com {
 - **国内服务器的 80/443 会被拦截**：未备案时运营商会返回「该网站暂时无法访问」的备案提示页
   （本机 `curl 127.0.0.1` 却是 200）。两个办法：① 完成 ICP 备案后用 80/443；
   ② 像本项目一样用 NAT 映射到非标准端口绕开。
+
+### 迁移到新服务器
+
+好消息：**博客本体几乎不用动**。源码在 Git 仓库里，`public/` 是本地构建产物，
+服务器上只有静态文件 + Nginx 配置，没有任何数据库或运行时依赖。真正要改的地方如下。
+
+#### 一、本地要改的（只有 1 个文件）
+
+`deploy/deploy.env`：
+
+```bash
+REMOTE="root@新服务器IP"
+SSH_PORT="新SSH端口"
+TARGET="/var/www/blog"                 # 一般不用改
+BASE_URL="http://新IP:新外部端口/"      # 访问地址变了才改
+```
+
+改完直接 `./deploy/deploy.sh` 即可。
+
+`hugo.toml` 里的 `baseURL` **不用改**，`deploy.sh` 会用 `--baseURL` 覆盖它。
+只有在你想跑 `hugo server` 本地预览、或改用 GitHub Pages 时才需要动。
+
+#### 二、新服务器要做的
+
+```bash
+# 1. 装 Nginx
+apt update && apt install -y nginx
+
+# 2. 建站点目录
+mkdir -p /var/www/blog
+
+# 3. 放配置（把本仓库的 deploy/ 传上去，或直接 scp 这个文件）
+cp deploy/nginx.conf /etc/nginx/sites-available/blog
+ln -sf /etc/nginx/sites-available/blog /etc/nginx/sites-enabled/blog
+
+# 4. 删掉默认站点，否则它会抢 default_server
+rm -f /etc/nginx/sites-enabled/default
+
+# 5. 放 SSH 公钥（让你本地能免密 rsync）
+mkdir -p /root/.ssh && chmod 700 /root/.ssh
+vim /root/.ssh/authorized_keys   # 粘贴本机 ~/.ssh/id_*.pub 的内容
+chmod 600 /root/.ssh/authorized_keys
+
+# 6. 检查并启动
+nginx -t && systemctl enable --now nginx
+```
+
+然后从本地推送内容：
+
+```bash
+./deploy/deploy.sh          # 本地构建后推到新服务器
+```
+
+#### 三、NAT 面板要改的
+
+服务器是内网 IP，外网访问全靠 NAT。换服务器后要按新的**内网 IP** 重建：
+
+| 外部端口 | 指向 | 用途 |
+| --- | --- | --- |
+| `27834` | `新内网IP:80` | 博客 |
+| `34365` | `新内网IP:22` | SSH（`deploy.sh` 的 rsync 要用） |
+
+**外部端口如果换了，`BASE_URL` 必须跟着改**，否则页面里的 CSS/JS 会 404。
+
+#### 四、容易漏的坑
+
+- **Nginx `default` 站点**：Debian 装完自带 `/etc/nginx/sites-enabled/default`，
+  它也声明了 `default_server`，会和博客的 `listen 80 default_server` 冲突
+  （报 `duplicate default server`）。必须删掉或禁用。
+- **rsync 用 `--delete`**：目标目录里的多余文件会被删掉。如果新服务器上已经放了
+  别的东西，先确认再执行。
+- **中文文件名**：确认新服务器 locale 是 UTF-8（`locale`），否则中文路径会乱码。
+- **80/443 被运营商拦截**：这是大陆未备案服务器的通病，跟换不换服务器无关，
+  继续用非标准端口即可。
+- **旧服务器别急着释放**：新服务器验证通过（博客能开、图片能显示、文件能下载）
+  之后再退，中间有个回退余地。
 
 ## 其他托管方式
 
