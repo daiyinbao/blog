@@ -389,7 +389,7 @@ Hugo 生成的是纯静态文件，服务器上只需要一个 Web 服务器（N
 > | 访问地址   | <http://103.236.97.137:27834/>              |
 > | 服务器系统  | Debian 13，Nginx 1.26                        |
 > | 站点目录   | `/var/www/blog`                             |
-> | SSH 登录 | `ssh -p 34365 root@103.236.97.137`（已配置公钥免密） |
+> | SSH 登录 | 已配置公钥免密，端口等见本地 `deploy/deploy.env`（不提交到仓库） |
 > | 更新文章   | 本地写完 → 项目目录执行 `./deploy/deploy.sh`          |
 > 
 > **注意两点：**
@@ -559,7 +559,7 @@ nginx -t && systemctl enable --now nginx
 | 外部端口 | 指向 | 用途 |
 | --- | --- | --- |
 | `27834` | `新内网IP:80` | 博客 |
-| `34365` | `新内网IP:22` | SSH（`deploy.sh` 的 rsync 要用） |
+| 你的SSH端口 | `新内网IP:22` | SSH（`deploy.sh` 的 rsync 要用） |
 
 **外部端口如果换了，`BASE_URL` 必须跟着改**，否则页面里的 CSS/JS 会 404。
 
