@@ -21,28 +21,25 @@ import zipfile
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def has_local_images(md_path):
-    try:
-        text = open(md_path, encoding="utf-8").read()
-    except OSError:
-        return False
-    return "](assets/" in text
+def make_zip(article_dir):
+    """把 index.md 和它实际引用到的图片打成一个 zip。
 
-
-def make_zip(article_dir, clean=False):
+    没有图片的文章也会生成（zip 里只有 index.md），这样每篇文章的
+    下载按钮行为一致。
+    """
     md = os.path.join(article_dir, "index.md")
-    assets = os.path.join(article_dir, "assets")
-    if not os.path.isfile(md) or not os.path.isdir(assets):
+    if not os.path.isfile(md):
         return None
 
-    # 收集实际被引用的图片，避免把废弃文件也打进去
     text = open(md, encoding="utf-8").read()
+    assets = os.path.join(article_dir, "assets")
+
+    # 只打包实际被引用的图片，避免把废弃文件也带进去
     used = []
-    for name in sorted(os.listdir(assets)):
-        if f"](assets/{name})" in text:
-            used.append(name)
-    if not used:
-        return None
+    if os.path.isdir(assets):
+        for name in sorted(os.listdir(assets)):
+            if f"](assets/{name})" in text:
+                used.append(name)
 
     zip_path = os.path.join(article_dir, "index.zip")
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -55,8 +52,6 @@ def make_zip(article_dir, clean=False):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("public", nargs="?", default="public")
-    ap.add_argument("--clean", action="store_true",
-                    help="清理没有图片的文章里可能残留的 zip")
     args = ap.parse_args()
 
     root = args.public
@@ -70,25 +65,17 @@ def main():
     for dirpath, _dirs, files in os.walk(root):
         if "index.md" not in files:
             continue
-        assets = os.path.join(dirpath, "assets")
-        zip_path = os.path.join(dirpath, "index.zip")
-
-        if not os.path.isdir(assets) or not has_local_images(os.path.join(dirpath, "index.md")):
-            if args.clean and os.path.isfile(zip_path):
-                os.remove(zip_path)
-            skipped += 1
-            continue
-
         result = make_zip(dirpath)
         if result:
             path, n = result
             made += 1
-            print(f"  {os.path.relpath(dirpath, root)}  ({n} 张图, "
+            label = f"{n} 张图" if n else "无图"
+            print(f"  {os.path.relpath(dirpath, root)}  ({label}, "
                   f"{os.path.getsize(path)/1024:.0f} KB)")
         else:
             skipped += 1
 
-    print(f"\n生成 {made} 个 zip，跳过 {skipped} 篇（无图片）")
+    print(f"\n生成 {made} 个 zip，跳过 {skipped} 篇（没有 index.md）")
     return 0
 
 

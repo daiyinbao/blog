@@ -15,7 +15,7 @@
 - 🌗 **明暗主题**：跟随系统偏好，可手动切换并记住选择
 - 💻 **代码块美化**：macOS 风格窗口 + 一键复制，明暗两套语法配色
 - 👀 **悬停预览**：首页鼠标悬停文章标题即可预览摘要
-- ⬇️ **导出 Markdown**：文章右上角一键下载该篇的 `.md` 源文件
+- ⬇️ **下载文章包**：文章右上角一键下载 `index.md` + 全部配图的 zip
 - 🗂️ **可折叠目录树**：点左栏边框上的圆钮收起/展开，正文自动加宽，状态会被记住
 - 🔎 **图片放大**：点击正文图片全屏查看；多图时可用左右箭头 / 键盘 `←` `→` / 手机滑动切换，Esc 关闭
 - 📱 **响应式**：移动端顶栏有「目录」按钮，左栏从左侧滑出为抽屉（点遮罩 / `Esc` / 点文章链接自动收起），搜索变为全屏
@@ -255,32 +255,29 @@ python3 scripts/shrink-oversized.py --max-width 2500
 > 两个脚本都会**原地修改** `content/` 下的文件，建议先在 git 里提交一次，
 > 或者先 `--dry-run` 看看会动哪些文件。
 
-### 导出 / 下载文章
+### 下载文章
 
-文章右上角有两个按钮：
+每篇文章右上角有一个「**下载文章包**」按钮，下载的是一个 zip：
 
-- **导出 MD**：下载该篇的原始源文件（含 front matter），和 `content/` 里的内容逐字节一致。
-  纯文字文章用它就够了。
-- **下载文章包**：下载一个 zip，里面有 `index.md` 和 **全部配图**（`assets/`）。
-  解压后用任意 Markdown 编辑器打开，图片就能正常显示。只有带图片的文章才会出现这个按钮。
+```text
+项目总览.zip
+├── index.md        ← 文章源文件（含 front matter）
+└── assets/         ← 文章用到的全部配图（无图的文章不会有这一层）
+    └── xxx.webp
+```
 
-> 为什么需要 zip：Markdown 里的图片是相对路径（`assets/xxx.webp`），
-> 单独下载一个 `.md` 文件的话图片不在旁边，打开就会图裂。
+解压后用任意 Markdown 编辑器打开 `index.md`，图片就能正常显示。
 
-zip 由 `scripts/make-zips.py` 在构建后生成（已接进 `deploy/deploy.sh`）。
-如果手动构建，记得也跑一下：
+> 为什么用 zip：Markdown 里的图片是相对路径（`assets/xxx.webp`），
+> 如果只下载一个 `.md` 文件，图片不在旁边，打开就会图裂。
+
+zip 由 `scripts/make-zips.py` 在构建后生成，已经接进 `deploy/deploy.sh`。
+手动构建时记得也跑一下：
 
 ```bash
 hugo
-python3 scripts/make-zips.py public --clean
+python3 scripts/make-zips.py public
 ```
-
-「导出 MD」用的是 Hugo 的自定义输出格式（见 `hugo.toml` 的 `outputFormats.Markdown`
-和 `layouts/_default/single.md`）：构建时会在每篇文章目录下额外生成一个 `index.md`，
-按钮通过 `download` 属性触发下载。草稿（`draft = true`）不会生成导出文件。
-
-> 部署提示：`deploy/deploy.sh` 已经带了 `--cleanDestinationDir`，
-> 避免本地用 `hugo server -D` 预览时产生的草稿文件被一起同步到服务器。
 
 ### 草稿与预览
 
@@ -523,8 +520,8 @@ blog.example.com {
 │   ├── 404.html              # 404 页面
 │   ├── _default/
 │   │   ├── baseof.html       # 页面骨架（侧栏折叠按钮、抽屉遮罩）
-│   │   ├── single.html       # 文章页（含导出 MD 按钮）
-│   │   ├── single.md         # 导出 MD 的输出模板
+│   │   ├── single.html       # 文章页（含下载文章包按钮）
+│   │   ├── single.md         # 生成 index.md 的输出模板（打包用）
 │   │   └── list.html         # 栏目页
 │   └── partials/             # header、文档树、搜索弹窗、head、scripts
 ├── assets/

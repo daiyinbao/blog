@@ -46,7 +46,7 @@ summaryLength = 120
 # ── 输出：首页额外生成搜索用的 index.json ────────────────────
 [outputs]
   home = ["HTML", "JSON"]
-  # 每篇文章额外生成一份原始 Markdown，供「导出 MD」下载
+  # 每篇文章额外生成一份原始 Markdown（index.md），供打包成 zip 下载
   page = ["HTML", "Markdown"]
 
 [outputFormats.JSON]
