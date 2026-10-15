@@ -38,12 +38,26 @@ def scope(css, prefix):
     return "\n".join(out)
 
 
+# 代码块底色改成与站点主题一致的表面色（不改 token 颜色）
+BG_LIGHT = "#f7f2f8"   # surface-container-low
+BG_DARK = "#222025"    # surface-container-low
+
+
+def retint(css, bg):
+    """把 .bg / .chroma 的背景色换成站点主题色，其余 token 颜色保持不变。"""
+    def fix(m):
+        head, body = m.group(1), m.group(2)
+        body = re.sub(r"background-color:\s*#[0-9a-fA-F]{3,8}", f"background-color:{bg}", body)
+        return head + body + "}"
+    return re.sub(r"((?:\.bg|\.chroma)\s*\{)([^}]*)\}", fix, css)
+
+
 def main():
-    light = scope(gen("github"), ':root:not([data-theme="dark"])')
-    dark = scope(gen("monokai"), '[data-theme="dark"]')
+    light = retint(scope(gen("github"), ':root:not([data-theme="dark"])'), BG_LIGHT)
+    dark = retint(scope(gen("monokai"), '[data-theme="dark"]'), BG_DARK)
 
     header = (
-        "/* 语法高亮：亮色 github / 暗色 monokai\n"
+        "/* 语法高亮：亮色 github / 暗色 monokai（底色已对齐站点主题）\n"
         "   由 scripts/gen-syntax.py 生成，勿手改。\n"
         "   亮色规则仅非暗色时生效，避免未覆盖的 token 沿用亮色深色字看不见。 */\n\n"
         "/* ── 亮色 GitHub ───────────────────────────────────────── */\n"

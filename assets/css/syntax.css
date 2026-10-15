@@ -1,10 +1,10 @@
-/* 语法高亮：亮色 github / 暗色 monokai
+/* 语法高亮：亮色 github / 暗色 monokai（底色已对齐站点主题）
    由 scripts/gen-syntax.py 生成，勿手改。
    亮色规则仅非暗色时生效，避免未覆盖的 token 沿用亮色深色字看不见。 */
 
 /* ── 亮色 GitHub ───────────────────────────────────────── */
-/* Background */ :root:not([data-theme="dark"]) .bg { background-color:#f7f7f7; }
-/* PreWrapper */ :root:not([data-theme="dark"]) .chroma { background-color:#f7f7f7;-webkit-text-size-adjust:none; }
+/* Background */ :root:not([data-theme="dark"]) .bg { background-color:#f7f2f8; }
+/* PreWrapper */ :root:not([data-theme="dark"]) .chroma { background-color:#f7f2f8;-webkit-text-size-adjust:none; }
 /* Error */ :root:not([data-theme="dark"]) .chroma .err { color:#f6f8fa;background-color:#82071e }
 /* LineLink */ :root:not([data-theme="dark"]) .chroma .lnlinks { outline:none;text-decoration:none;color:inherit }
 /* LineTableTD */ :root:not([data-theme="dark"]) .chroma .lntd { vertical-align:top;padding:0;margin:0;border:0; }
@@ -78,8 +78,8 @@
 /* TextWhitespace */ :root:not([data-theme="dark"]) .chroma .w { color:#fff }
 
 /* ── 暗色 Monokai ──────────────────────────────────────── */
-/* Background */ [data-theme="dark"] .bg { color:#f8f8f2;background-color:#272822; }
-/* PreWrapper */ [data-theme="dark"] .chroma { color:#f8f8f2;background-color:#272822;-webkit-text-size-adjust:none; }
+/* Background */ [data-theme="dark"] .bg { color:#f8f8f2;background-color:#222025; }
+/* PreWrapper */ [data-theme="dark"] .chroma { color:#f8f8f2;background-color:#222025;-webkit-text-size-adjust:none; }
 /* Error */ [data-theme="dark"] .chroma .err { color:#960050;background-color:#1e0010 }
 /* LineLink */ [data-theme="dark"] .chroma .lnlinks { outline:none;text-decoration:none;color:inherit }
 /* LineTableTD */ [data-theme="dark"] .chroma .lntd { vertical-align:top;padding:0;margin:0;border:0; }

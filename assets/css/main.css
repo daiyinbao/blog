@@ -1,15 +1,71 @@
 /* ═══════════════════════════════════════════════════════════
+   自托管字体（Roboto 正文 / Lora 标题）
+   自托管而非引 Google Fonts，避免国内访问 fonts.gstatic.com 不稳定
+   ═══════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/roboto-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/roboto-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/lora-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/lora-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+/* ═══════════════════════════════════════════════════════════
    设计变量（改这里即可整体换肤）
    ═══════════════════════════════════════════════════════════ */
 :root {
-  --bg-color: #ffffff;
-  --text-color: #1d1d1f;
-  --sidebar-bg: #f5f5f7;
-  --border-color: #d2d2d7;
-  --link-color: #0066cc;
-  --hover-color: #004499;
-  --code-bg: #f6f8fa;
-  --muted-color: #86868b;
+  /* 配色取自 Material Design 3（紫罗兰色系） */
+  --bg-color: #fdf7fe;              /* surface */
+  --text-color: #1c1b1f;            /* on-surface */
+  --sidebar-bg: #f3edf4;            /* surface-container */
+  --border-color: #cac4cf;          /* outline-variant */
+  --link-color: #6a589b;            /* primary */
+  --hover-color: #584880;
+  --code-bg: #f7f2f8;               /* surface-container-low */
+  --muted-color: #49454e;           /* on-surface-variant */
+  /* 字体：正文无衬线 + 标题衬线，中文回退系统字体 */
+  --font-plain: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+  --font-serif: "Lora", "Songti SC", "Noto Serif CJK SC", "Noto Serif SC",
+    "Source Han Serif SC", "SimSun", serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+    "Roboto Mono", monospace;
   --header-height: 60px;
   --content-max-width: 900px;
   --content-max-width-wide: 1080px;   /* 收起目录树后的正文宽度 */
@@ -21,14 +77,14 @@
 }
 
 [data-theme="dark"] {
-  --bg-color: #1e1e1e;
-  --text-color: #cccccc;
-  --sidebar-bg: #252526;
-  --border-color: #3e3e42;
-  --link-color: #3794ff;
-  --hover-color: #5ca6ff;
-  --code-bg: #2d2d2d;
-  --muted-color: #8a8a8a;
+  --bg-color: #1b191e;              /* surface */
+  --text-color: #e6e0e9;            /* on-surface */
+  --sidebar-bg: #26242a;            /* surface-container */
+  --border-color: #494551;          /* outline-variant */
+  --link-color: #cebff0;            /* primary */
+  --hover-color: #e8defb;
+  --code-bg: #222025;               /* surface-container-low */
+  --muted-color: #cbc4d2;           /* on-surface-variant */
 }
 
 /* ── 基础 ─────────────────────────────────────────────────── */
@@ -38,9 +94,7 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    Helvetica, Arial, sans-serif;
+  font-family: var(--font-plain);
   font-size: 16px;
   line-height: 1.6;
   background-color: var(--bg-color);
@@ -143,7 +197,7 @@ header {
 .slider {
   position: absolute;
   inset: 0;
-  background-color: #ccc;
+  background-color: var(--border-color);
   cursor: pointer;
   transition: .4s;
 }
@@ -155,12 +209,12 @@ header {
   bottom: 2px;
   width: 20px;
   height: 20px;
-  background-color: #fff;
+  background-color: var(--bg-color);
   border-radius: 50%;
   transition: .4s;
 }
-input:checked + .slider { background-color: #0066cc; }
-input:checked + .slider::before { transform: translateX(26px); background-color: #1e1e1e; }
+input:checked + .slider { background-color: var(--link-color); }
+input:checked + .slider::before { transform: translateX(26px); background-color: var(--link-color); }
 
 .icon-sun, .icon-moon {
   position: absolute;
@@ -170,7 +224,7 @@ input:checked + .slider::before { transform: translateX(26px); background-color:
   transition: opacity .3s ease;
 }
 .icon-sun { left: 4px; color: #f1c40f; opacity: 1; }
-.icon-moon { right: 4px; color: #f5f5f7; opacity: 0; }
+.icon-moon { right: 4px; color: var(--bg-color); opacity: 0; }
 input:checked + .slider .icon-sun { opacity: 0; }
 input:checked + .slider .icon-moon { opacity: 1; }
 
@@ -313,15 +367,14 @@ li.tree-active > .tree-item-wrapper > .tree-indent::before,
 li.tree-active > .tree-item-wrapper > .tree-indent::after {
   background-color: var(--link-color);
 }
-.tree-dashed-line { flex-grow: 1; height: 1px; margin: 0 10px; border-bottom: 1px dashed #c9c9ce; }
+.tree-dashed-line { flex-grow: 1; height: 1px; margin: 0 10px; border-bottom: 1px dashed var(--border-color); }
 .tree-date { font-size: .85em; color: var(--muted-color); white-space: nowrap; }
-[data-theme="dark"] .tree-dashed-line { border-bottom-color: #444; }
-[data-theme="dark"] { --tree-line-color: #4a4a4f; }
+[data-theme="dark"] { --tree-line-color: #494551; }
 
 .article-link.active { font-weight: 700; color: var(--link-color); }
 
 /* ── 首页 ─────────────────────────────────────────────────── */
-.home-title { margin: 0 0 6px; font-size: 2em; }
+.home-title { margin: 0 0 6px; font-family: var(--font-serif); font-weight: 600; font-size: 2em; }
 .home-desc { margin: 0 0 24px; color: var(--muted-color); }
 .homepage-tree { margin-top: 10px; }
 .homepage-tree > .tree-list { padding-left: 0; }
@@ -333,6 +386,8 @@ li.tree-active > .tree-item-wrapper > .tree-indent::after {
 .markdown-body h4, .markdown-body h5, .markdown-body h6 {
   margin-top: 1.6em;
   margin-bottom: .6em;
+  font-family: var(--font-serif);
+  font-weight: 600;
   line-height: 1.3;
   scroll-margin-top: calc(var(--header-height) + 20px);
 }
@@ -351,14 +406,14 @@ li.tree-active > .tree-item-wrapper > .tree-indent::after {
   padding: 1px 5px;
   font-weight: 500;
   color: var(--link-color);
-  background-color: rgba(0, 102, 204, .08);
-  border-bottom: 1px solid rgba(0, 102, 204, .25);
+  background-color: rgba(106, 88, 155, .1);
+  border-bottom: 1px solid rgba(106, 88, 155, .3);
   border-radius: 4px;
   transition: all .2s ease;
 }
 [data-theme="dark"] .markdown-body a:not(:has(img)):not(.anchor):not(.header-link) {
-  background-color: rgba(55, 148, 255, .12);
-  border-bottom-color: rgba(55, 148, 255, .25);
+  background-color: rgba(206, 191, 240, .14);
+  border-bottom-color: rgba(206, 191, 240, .3);
 }
 .markdown-body a:not(:has(img)):not(.anchor):not(.header-link):hover {
   color: var(--bg-color) !important;
@@ -371,7 +426,7 @@ li.tree-active > .tree-item-wrapper > .tree-indent::after {
 
 .markdown-body code {
   padding: .2em .4em;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: .9em;
   background-color: var(--code-bg);
   border-radius: 3px;
@@ -417,7 +472,7 @@ li.tree-active > .tree-item-wrapper > .tree-indent::after {
 .markdown-body hr { height: 1px; margin: 2em 0; border: none; background-color: var(--border-color); }
 
 /* ── 文章头部 ─────────────────────────────────────────────── */
-.post-title { margin: 0 0 8px; font-size: 1.9em; line-height: 1.3; }
+.post-title { margin: 0 0 8px; font-family: var(--font-serif); font-weight: 600; font-size: 1.9em; line-height: 1.3; }
 .post-meta {
   display: flex;
   flex-wrap: wrap;
